@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>$(DEVELOPMENT_LANGUAGE)</string>
+
+    <key>CFBundleDisplayName</key>
+    <string>SHIFT 7</string>
+
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+
+    <key>CFBundleName</key>
+    <string>SHIFT 7</string>
+
+    <key>CFBundleShortVersionString</key>
+    <string>$(FLUTTER_BUILD_NAME)</string>
+
+    <key>CFBundleVersion</key>
+    <string>$(FLUTTER_BUILD_NUMBER)</string>
+
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+
+    <key>UIMainStoryboardFile</key>
+    <string>Main</string>
+
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>en</string>
+        <string>ar</string>
+    </array>
+
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Allow Shift7 to check network connectivity.</string>
+
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_dartobservatory._tcp</string>
+    </array>
+
+    <key>NSCameraUsageDescription</key>
+    <string>يحتاج التطبيق للوصول إلى الكاميرا لالتقاط الصور والفيديوهات.</string>
+
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>يحتاج التطبيق للوصول إلى مكتبة الصور لاختيار الصور.</string>
+
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>يحتاج التطبيق لحفظ الصور في مكتبة الصور.</string>
+
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>يحتاج التطبيق للوصول إلى الموقع عند الاستخدام لخدمات تعتمد على الموقع.</string>
+
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>يحتاج التطبيق للوصول إلى الموقع دائمًا لتقديم أفضل تجربة خدمات.</string>
+
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>يحتاج التطبيق للوصول إلى الموقع في الخلفية.</string>
+
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+        <string>remote-notification</string>
+    </array>
+
+    <key>NSUserNotificationsUsageDescription</key>
+    <string>يحتاج التطبيق لإرسال إشعارات مهمة إليك.</string>
+
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.767244550542-kcp9nrqktfpeu1pcic4vc1sn8mc5j2ee</string>
+            </array>
+        </dict>
+    </array>
+
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>http</string>
+        <string>https</string>
+        <string>mailto</string>
+        <string>tel</string>
+        <string>sms</string>
+    </array>
+
+    <key>GMSApiKey</key>
+    <string>AIzaSyCjDmDql4Xw_GS0EFjd_jZHV-Gzx-ybFkM</string>
+
+    <key>MinimumOSVersion</key>
+    <string>13.0</string>
+</dict>
+</plist>

@@ -1,0 +1,105 @@
+name: shift7_app
+description: "SHIFT 7 Is A New Flutter Project Created By Visual Innovate Company."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  #–– Flutter & Core ––#
+  flutter:
+    sdk: flutter
+  cupertino_icons: any
+
+  #–– State Management ––#
+  bloc: any
+  flutter_bloc: any
+  equatable: any
+  get_it: any
+
+  #–– Networking ––#
+  dio: any
+  pretty_dio_logger: any
+  url_launcher: any
+  package_info_plus: any
+
+  #–– Firebase ––#
+  firebase_core: any
+  firebase_auth: any
+  firebase_messaging: any
+
+  #–– Notification ––#
+  flutter_local_notifications: any
+
+  #–– Auth ––#
+  google_sign_in: any
+
+  #–– Failures ––#
+  dartz: any
+
+  #–– Local Storage ––#
+  flutter_secure_storage: any
+  shared_preferences: any
+
+  #–– Images & Media ––#
+  cached_network_image: any
+  image_picker: any
+  flutter_svg: any
+  lottie: any
+
+  #–– UI & Icons ––#
+  eva_icons_flutter: any
+  font_awesome_flutter: any
+  loading_animation_widget: any
+  delightful_toast: any
+  flutter_screenutil: any
+  redacted: any
+  shimmer: any
+  intl_phone_field: any
+  google_maps_flutter: any
+  geolocator: any
+  flutter_widget_from_html: any
+ 
+  #–– Localization ––#
+  intl: any
+  easy_localization: any
+  
+  #–– Maps ––#
+  geocoding: any
+  skeletonizer: ^2.1.0+1
+
+dev_dependencies:
+  #–– Testing & Linting ––#
+  flutter_test:
+    sdk: flutter
+  flutter_lints: any
+
+  #–– Assets & Launcher ––#
+  flutter_launcher_icons: any
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/svg/
+    - assets/icons/svg/
+    - assets/images/png/
+    - assets/lottie/
+    - assets/translations/
+    - assets/fonts/
+
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-VariableFont_slnt,wght.ttf
+
+# Flutter Launcher Icons configuration
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/png/app_image.png"
+  adaptive_icon_foreground: "assets/images/png/app_image.png"
+  adaptive_icon_background: "#FFFFFF"
+  remove_alpha_ios: true
+  ios_background_color: "#FFFFFF"

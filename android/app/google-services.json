@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "767244550542",
+    "project_id": "shift7-f38ed",
+    "storage_bucket": "shift7-f38ed.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767244550542:android:39441cf8bbc6a0bc1564df",
+        "android_client_info": {
+          "package_name": "com.visualinnovate.Shift7Store"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "767244550542-spa29p9ajgj1cqig7b4esjcurd9mug9l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMrwUkrU5xffJJxQ2v5oyEYEb_H-SeHTY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "767244550542-spa29p9ajgj1cqig7b4esjcurd9mug9l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "767244550542-j52cpvr2k82iue63hhnfor7ngsnqpkqn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.visualinnovate.shift7"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

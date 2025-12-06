@@ -1,0 +1,28 @@
+platform :ios, '13.0'
+
+target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
+
+  # Firebase dependencies
+  pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Messaging'
+
+  # Optional: Local notifications for flutter_local_notifications
+  pod 'FlutterLocalNotifications', :path => '.symlinks/plugins/flutter_local_notifications/ios'
+
+  # Optional: Google Sign-In
+  pod 'GoogleSignIn', :path => '.symlinks/plugins/google_sign_in/ios'
+
+  target 'RunnerTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+  end
+end

@@ -1,0 +1,80 @@
+name: Flutter CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build_android:
+    name: 🔧 Build Android & Distribute
+    runs-on: ubuntu-latest
+
+    env:
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+      ANDROID_HOME: /usr/local/lib/android/sdk
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Flutter 3.35.4
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.35.4"
+          channel: stable
+
+      - name: Ensure Android cmdline-tools installed
+        run: |
+          "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager" --version || true
+          if [ ! -d "${ANDROID_SDK_ROOT}/cmdline-tools/latest" ]; then
+            mkdir -p "${ANDROID_SDK_ROOT}/cmdline-tools"
+            if [ -x "/usr/local/lib/android/tools/bin/sdkmanager" ]; then
+              "/usr/local/lib/android/tools/bin/sdkmanager" --sdk_root="${ANDROID_SDK_ROOT}" "cmdline-tools;latest"
+            else
+              if command -v sdkmanager >/dev/null 2>&1; then
+                sdkmanager --sdk_root="${ANDROID_SDK_ROOT}" "cmdline-tools;latest"
+              fi
+            fi
+          fi
+          ls -R "${ANDROID_SDK_ROOT}/cmdline-tools" || true
+
+      - name: Accept Android SDK licenses
+        run: |
+          if [ -x "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager" ]; then
+            yes | "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager" --sdk_root="${ANDROID_SDK_ROOT}" --licenses
+          elif [ -x "/usr/local/lib/android/tools/bin/sdkmanager" ]; then
+            yes | "/usr/local/lib/android/tools/bin/sdkmanager" --sdk_root="${ANDROID_SDK_ROOT}" --licenses
+          else
+            echo "sdkmanager not found to accept licenses"
+            exit 1
+          fi
+
+      - name: Flutter doctor
+        run: flutter doctor -v
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Android APK (release)
+        run: flutter build apk --release
+
+      - name: List APK outputs
+        run: ls -R build/app/outputs
+
+      - name: Distribute Android to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1.7.1
+        with:
+          appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
+          groups: Shift-7-Store
+          file: build/app/outputs/flutter-apk/app-release.apk
