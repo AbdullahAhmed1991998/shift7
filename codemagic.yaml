@@ -12,6 +12,16 @@ workflows:
     integrations:
       app_store_connect: moy
     scripts:
+      - name: Configure Git and CocoaPods for better performance
+        script: |
+          git config --global advice.detachedHead false
+          git config --global http.postBuffer 524288000
+          git config --global http.lowSpeedLimit 0
+          git config --global http.lowSpeedTime 999999
+          git config --global http.version HTTP/1.1
+          git config --global url."https://".insteadOf git://
+          # Increase CocoaPods timeout
+          export COCOAPODS_DISABLE_STATS=true
       - name: Get Flutter packages
         script: |
           flutter packages pub get
@@ -20,6 +30,35 @@ workflows:
           flutter precache --ios
           cd ios
           flutter pub get
+          cd ..
+      - name: Install CocoaPods dependencies
+        script: |
+          cd ios
+          # Clean CocoaPods cache
+          pod cache clean --all || true
+          # Remove old Pods and lock file
+          rm -rf Pods Podfile.lock .symlinks
+          # Update CocoaPods repo (skip if fails, will retry during install)
+          pod repo update || echo "Repo update failed, will continue..."
+          # Install pods with multiple retries
+          MAX_RETRIES=3
+          RETRY_COUNT=0
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            echo "Attempt $((RETRY_COUNT + 1)) of $MAX_RETRIES to install pods..."
+            if pod install --repo-update; then
+              echo "Pods installed successfully!"
+              break
+            else
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                echo "Pod install failed, retrying in 15 seconds..."
+                sleep 15
+              else
+                echo "Pod install failed after $MAX_RETRIES attempts"
+                exit 1
+              fi
+            fi
+          done
           cd ..
       - name: Set Gradle properties for better memory management
         script: |
