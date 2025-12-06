@@ -12,11 +12,14 @@ workflows:
     integrations:
       app_store_connect: moy
     scripts:
-      - name: Update CocoaPods Repositories
+      - name: Get Flutter packages
         script: |
+          flutter packages pub get
+      - name: Prepare iOS dependencies
+        script: |
+          flutter precache --ios
           cd ios
-          pod repo update
-          pod install --repo-update
+          flutter pub get
           cd ..
       - name: Set up keychain to be used for codesigning using Codemagic CLI 'keychain' command
         script: |
@@ -27,9 +30,6 @@ workflows:
       - name: Set up code signing settings on Xcode project
         script: |
           xcode-project use-profiles
-      - name: Get Flutter packages
-        script: |
-          flutter packages pub get
       - name: Flutter build ipa and automatic versioning
         script: |
           flutter build ipa --release \

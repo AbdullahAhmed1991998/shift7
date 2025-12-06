@@ -9,11 +9,8 @@ target 'Runner' do
   pod 'Firebase/Auth'
   pod 'Firebase/Messaging'
 
-  # Optional: Local notifications for flutter_local_notifications
-  pod 'FlutterLocalNotifications', :path => '.symlinks/plugins/flutter_local_notifications/ios'
-
-  # Optional: Google Sign-In
-  pod 'GoogleSignIn', :path => '.symlinks/plugins/google_sign_in/ios'
+  # Flutter plugins are automatically managed by Flutter
+  # No need to add them manually here
 
   target 'RunnerTests' do
     inherit! :search_paths
