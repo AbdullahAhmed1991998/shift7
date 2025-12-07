@@ -2,10 +2,6 @@ workflows:
   ios-workflow:
     name: iOS Workflow
     environment:
-      flutter: stable
-      xcode: latest
-      vars:
-        BUILD_MODE: release
       ios_signing:
         provisioning_profiles:
           - Shift7_Distribute_Certificate
@@ -37,11 +33,11 @@ workflows:
         script: |
           xcode-project use-profiles
 
-      - name: Build IPA
+      - name: Flutter build IPA
         script: |
           flutter build ipa --release \
-          --build-name=1.0.4 \
-          --build-number=10
+          --build-name=1.0.0 \
+          --build-number=1
 
     artifacts:
       - build/ios/ipa/*.ipa
