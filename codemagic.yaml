@@ -21,35 +21,23 @@ workflows:
           cd ios
           pod deintegrate
           rm -rf Pods Podfile.lock
-          pod repo update
           pod install --repo-update
           cd ..
 
-      - name: Install CocoaPods
-        script: |
-          cd ios
-          pod repo update
-          pod install --repo-update
-          cd ..
-
-      - name: Set up keychain to be used for codesigning
+      - name: Set up keychain
         script: |
           keychain initialize
-
-      - name: Use system default keychain
-        script: |
           keychain add-certificates
 
-      - name: Set up code signing settings
+      - name: Apply code signing
         script: |
           xcode-project use-profiles
 
-      - name: Flutter build ipa with versioning
+      - name: Flutter build IPA
         script: |
           flutter build ipa --release \
           --build-name=1.0.4 \
-          --build-number=10 \
-          --export-options-plist=/Users/builder/export_options.plist
+          --build-number=10
 
     artifacts:
       - build/ios/ipa/*.ipa
