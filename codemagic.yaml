@@ -34,28 +34,56 @@ workflows:
       - name: Install CocoaPods dependencies
         script: |
           cd ios
+          # Apply Git config again (in case it wasn't applied globally)
+          git config --global advice.detachedHead false || true
+          git config --global http.postBuffer 524288000 || true
+          git config --global http.lowSpeedLimit 0 || true
+          git config --global http.lowSpeedTime 999999 || true
+          git config --global http.version HTTP/1.1 || true
+          git config --global url."https://".insteadOf git:// || true
+          
           # Clean CocoaPods cache
           pod cache clean --all || true
           # Remove old Pods and lock file
           rm -rf Pods Podfile.lock .symlinks
-          # Update CocoaPods repo (skip if fails, will retry during install)
-          pod repo update || echo "Repo update failed, will continue..."
+          
+          # Try to update repo first (with timeout)
+          echo "Updating CocoaPods repo..."
+          timeout 300 pod repo update || echo "Repo update timed out or failed, will continue..."
+          
           # Install pods with multiple retries
+          # First attempt: with repo update
+          # Subsequent attempts: without repo update (faster)
           MAX_RETRIES=3
           RETRY_COUNT=0
           while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
             echo "Attempt $((RETRY_COUNT + 1)) of $MAX_RETRIES to install pods..."
-            if pod install --repo-update; then
-              echo "Pods installed successfully!"
-              break
-            else
-              RETRY_COUNT=$((RETRY_COUNT + 1))
-              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-                echo "Pod install failed, retrying in 15 seconds..."
-                sleep 15
+            if [ $RETRY_COUNT -eq 0 ]; then
+              # First attempt: with repo update
+              if pod install --repo-update; then
+                echo "Pods installed successfully!"
+                break
               else
-                echo "Pod install failed after $MAX_RETRIES attempts"
-                exit 1
+                RETRY_COUNT=$((RETRY_COUNT + 1))
+                if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                  echo "Pod install failed, retrying without repo update in 15 seconds..."
+                  sleep 15
+                fi
+              fi
+            else
+              # Subsequent attempts: without repo update
+              if pod install --no-repo-update; then
+                echo "Pods installed successfully!"
+                break
+              else
+                RETRY_COUNT=$((RETRY_COUNT + 1))
+                if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                  echo "Pod install failed, retrying in 15 seconds..."
+                  sleep 15
+                else
+                  echo "Pod install failed after $MAX_RETRIES attempts"
+                  exit 1
+                fi
               fi
             fi
           done
