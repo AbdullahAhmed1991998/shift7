@@ -90,9 +90,16 @@ workflows:
           cd ..
       - name: Set Gradle properties for better memory management
         script: |
-          echo "org.gradle.jvmargs=-Xmx10G -XX:MaxMetaspaceSize=5G -XX:ReservedCodeCacheSize=1G -XX:+HeapDumpOnOutOfMemoryError -XX:+UseG1GC" >> android/gradle.properties
-          echo "org.gradle.parallel=true" >> android/gradle.properties
-          echo "org.gradle.caching=true" >> android/gradle.properties
+          # Overwrite gradle.properties with optimized settings
+          cat > android/gradle.properties << EOF
+          org.gradle.jvmargs=-Xmx12G -XX:MaxMetaspaceSize=6G -XX:ReservedCodeCacheSize=1G -XX:+HeapDumpOnOutOfMemoryError -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+          android.useAndroidX=true
+          android.enableJetifier=false
+          org.gradle.parallel=true
+          org.gradle.caching=true
+          org.gradle.daemon=true
+          org.gradle.configureondemand=true
+          EOF
       - name: Set up keychain to be used for codesigning using Codemagic CLI 'keychain' command
         script: |
           keychain initialize
@@ -104,7 +111,9 @@ workflows:
           xcode-project use-profiles
       - name: Flutter build ipa and automatic versioning
         script: |
-          export GRADLE_OPTS="-Xmx10G -XX:MaxMetaspaceSize=5G"
+          export GRADLE_OPTS="-Xmx12G -XX:MaxMetaspaceSize=6G"
+          # Skip Android build validation
+          export FLUTTER_BUILD_MODE=release
           flutter build ipa --release \
           --build-name=1.0.4 \
           --build-number=10 \
