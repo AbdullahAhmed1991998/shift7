@@ -1,5 +1,3 @@
-# Integration section is required to make use of the keys stored in 
-# Codemagic UI under Apple Developer Portal integration.
 workflows:
   ios-workflow:
     name: iOS Workflow
@@ -11,43 +9,53 @@ workflows:
           - Visual_Distribute_Certificate
     integrations:
       app_store_connect: moy
+
     scripts:
-      - name: Update CocoaPods Repositories
+      - name: Get Flutter packages
+        script: |
+          flutter clean
+          flutter pub get
+
+      - name: Clean iOS Pods
+        script: |
+          cd ios
+          rm -rf Pods Podfile.lock
+          cd ..
+
+      - name: Install CocoaPods
         script: |
           cd ios
           pod repo update
           pod install --repo-update
           cd ..
-      - name: Set up keychain to be used for codesigning using Codemagic CLI 'keychain' command
+
+      - name: Set up keychain to be used for codesigning
         script: |
           keychain initialize
+
       - name: Use system default keychain
         script: |
           keychain add-certificates
-      - name: Set up code signing settings on Xcode project
+
+      - name: Set up code signing settings
         script: |
           xcode-project use-profiles
-      - name: Get Flutter packages
-        script: |
-          flutter packages pub get
-      - name: Flutter build ipa and automatic versioning
+
+      - name: Flutter build ipa with versioning
         script: |
           flutter build ipa --release \
           --build-name=1.0.4 \
           --build-number=10 \
           --export-options-plist=/Users/builder/export_options.plist
+
     artifacts:
       - build/ios/ipa/*.ipa
 
-
     publishing:
       app_store_connect:
-        # Use referenced App Store Connect API key to authenticate binary upload
         auth: integration
         submit_to_testflight: true
         beta_groups:
           - tester
           - Sufian
           - VISUAL
-
-
