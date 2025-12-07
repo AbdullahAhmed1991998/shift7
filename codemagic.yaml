@@ -10,7 +10,7 @@ workflows:
         BUILD_MODE: release
       ios_signing:
         certificates:
-          - Visual_Distribute_Certificate      # شهادة التوزيع
+          - Shift7_Distribute_Certificate      # شهادة التوزيع
         provisioning_profiles:
           - Shift7_Distribute_Certificate     # App Store Distribution profile
     integrations:
