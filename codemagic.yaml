@@ -1,8 +1,6 @@
 workflows:
   ios-workflow:
     name: iOS Workflow
-    max_build_duration: 120
-    instance_type: mac_mini_m1
     environment:
       flutter: stable
       xcode: latest
@@ -10,7 +8,7 @@ workflows:
         BUILD_MODE: release
       ios_signing:
         certificates:
-          - Shift7_Distribute_Certificate      # شهادة التوزيع
+          - Visual_Distribute_Certificate      # شهادة التوزيع
         provisioning_profiles:
           - Shift7_Distribute_Certificate     # App Store Distribution profile
     integrations:
@@ -21,6 +19,8 @@ workflows:
         script: |
           flutter clean
           flutter pub get
+          # Skip Android build - we only need iOS
+          echo "Skipping Android build - iOS only"
 
       - name: Clean iOS Pods
         script: |
@@ -41,20 +41,27 @@ workflows:
 
       - name: Build IPA
         script: |
-          # Build iOS IPA only (skip Android completely)
-          # This command builds only iOS, not Android
+          # Build iOS IPA only (no Android)
           flutter build ipa --release \
           --build-name=1.0.4 \
           --build-number=10 \
-          --export-method=app-store
+          --export-method=app-store \
+          --no-pub
           
           # Verify IPA was created
-          if [ ! -f "build/ios/ipa/*.ipa" ]; then
-            echo "IPA file not found!"
-            ls -la build/ios/ipa/
+          echo "Checking for IPA file..."
+          IPA_FILE=$(find build/ios/ipa -name "*.ipa" | head -1)
+          if [ -z "$IPA_FILE" ]; then
+            echo "ERROR: IPA file not found!"
+            echo "Contents of build/ios/ipa/:"
+            ls -la build/ios/ipa/ || true
+            echo "Contents of build/ios/:"
+            ls -la build/ios/ || true
             exit 1
           fi
-          echo "IPA build successful!"
+          
+          echo "IPA build completed successfully: $IPA_FILE"
+          ls -lh "$IPA_FILE"
 
     artifacts:
       - build/ios/ipa/*.ipa
