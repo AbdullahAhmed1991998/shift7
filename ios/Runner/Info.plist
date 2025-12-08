@@ -17,6 +17,10 @@
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
 
+    <!-- Explicitly mark this bundle as an application for App Store validation -->
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+
     <key>CFBundleName</key>
     <string>SHIFT 7</string>
 
@@ -34,6 +38,22 @@
 
     <key>UIMainStoryboardFile</key>
     <string>Main</string>
+
+    <!-- Supported interface orientations (required for iPad multitasking) -->
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationPortraitUpsideDown</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationPortraitUpsideDown</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
 
     <key>CFBundleLocalizations</key>
     <array>
