@@ -1,74 +1,52 @@
+# Integration section is required to make use of the keys stored in
+# Codemagic UI under Apple Developer Portal integration.
 workflows:
   ios-workflow:
     name: iOS Workflow
     environment:
-      flutter: stable
-      xcode: latest
-      vars:
-        BUILD_MODE: release
       ios_signing:
-        certificates:
-          - Visual_Distribute_Certificate      # شهادة التوزيع
         provisioning_profiles:
-          - Shift7_Distribute_Certificate     # App Store Distribution profile
+          - Shift7_Distribute_Certificate
+        certificates:
+          - Visual_Distribute_Certificate
     integrations:
-      app_store_connect: shift7                # integration معرف في Codemagic
-
+      app_store_connect: moy
     scripts:
-      - name: Get Flutter packages
-        script: |
-          flutter clean
-          flutter pub get
-          # Skip Android build - we only need iOS
-          echo "Skipping Android build - iOS only"
-
-      - name: Clean iOS Pods
+      - name: Update CocoaPods Repositories
         script: |
           cd ios
-          pod deintegrate
           rm -rf Pods Podfile.lock
+          pod repo update
           pod install --repo-update
           cd ..
-
-      - name: Set up keychain
+      - name: Set up keychain to be used for codesigning using Codemagic CLI 'keychain' command
         script: |
           keychain initialize
+      - name: Use system default keychain
+        script: |
           keychain add-certificates
-
-      - name: Apply code signing
+      - name: Set up code signing settings on Xcode project
         script: |
           xcode-project use-profiles
-
-      - name: Build IPA
+      - name: Get Flutter packages
         script: |
-          # Build iOS IPA only (no Android)
+          flutter packages pub get
+      - name: Flutter build ipa and automatic versioning
+        script: |
           flutter build ipa --release \
           --build-name=1.0.4 \
           --build-number=10 \
-          --export-method=app-store \
-          --no-pub
-          
-          # Verify IPA was created
-          echo "Checking for IPA file..."
-          IPA_FILE=$(find build/ios/ipa -name "*.ipa" | head -1)
-          if [ -z "$IPA_FILE" ]; then
-            echo "ERROR: IPA file not found!"
-            echo "Contents of build/ios/ipa/:"
-            ls -la build/ios/ipa/ || true
-            echo "Contents of build/ios/:"
-            ls -la build/ios/ || true
-            exit 1
-          fi
-          
-          echo "IPA build completed successfully: $IPA_FILE"
-          ls -lh "$IPA_FILE"
-
+          --export-options-plist=/Users/builder/export_options.plist
     artifacts:
       - build/ios/ipa/*.ipa
 
+
     publishing:
       app_store_connect:
+        # Use referenced App Store Connect API key to authenticate binary upload
         auth: integration
         submit_to_testflight: true
         beta_groups:
           - tester
+
+
