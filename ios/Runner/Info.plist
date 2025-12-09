@@ -6,7 +6,7 @@
     <string>$(DEVELOPMENT_LANGUAGE)</string>
 
     <key>CFBundleDisplayName</key>
-    <string>SHIFT 7</string>
+    <string>SHIFT 7 Store</string>
 
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
@@ -22,7 +22,7 @@
     <string>APPL</string>
 
     <key>CFBundleName</key>
-    <string>SHIFT 7</string>
+    <string>SHIFT 7 Store</string>
 
     <key>CFBundleShortVersionString</key>
     <string>1.0.0</string>
